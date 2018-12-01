@@ -55,8 +55,7 @@ public class MultiThreadChatClient {
                     System.out.println("메세지는 최소 한글자 이상입니다.");
                     continue;
                 }
-
-                boolean isQuit = false;
+                
                 if("quit".equals(message)) {
                     System.exit(1);
                 } else {
