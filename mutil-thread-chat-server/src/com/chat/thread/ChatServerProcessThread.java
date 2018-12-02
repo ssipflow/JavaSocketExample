@@ -14,8 +14,7 @@ public class ChatServerProcessThread implements Runnable{
     private String nickname = null;
     private Socket socket = null;
     private List<PrintWriter> listSocketWirter = null;
-    private FileOutputStream logFileStream = null;
-
+    FileOutputStream logFileStream = null;
 
     public ChatServerProcessThread(Socket socket, List<PrintWriter> listSocketWirter) {
         this.socket = socket;
@@ -24,6 +23,9 @@ public class ChatServerProcessThread implements Runnable{
 
     @Override
     public void run() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String curDate = dateFormat.format(new Date());
+
         try {
             BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8) );
             PrintWriter printWriter = new PrintWriter( new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
@@ -31,13 +33,11 @@ public class ChatServerProcessThread implements Runnable{
 
             while(true) {
                 String request = bufferedReader.readLine();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String curDate = dateFormat.format(new Date());
+
 
                 if( request == null ) {
                     consoleLog(nickname + " 클라이언트로부터 연결 끊김");
                     doQuit(printWriter, curDate);
-                    fileWrite(" 님이 퇴장했습니다.", curDate, logFileStream);
                     break;
                 }
 
@@ -50,11 +50,13 @@ public class ChatServerProcessThread implements Runnable{
                     fileWrite( " : " + tokens[1], curDate, logFileStream);
                 } else if("quit".equals(tokens[0])) {
                     doQuit(printWriter, curDate);
+                    fileWrite(" 님이 퇴장했습니다.", curDate, logFileStream);
                 }
             }
         } catch (IOException e) {
             consoleLog(this.nickname + " 님이 채팅방을 나갔습니다.");
         } finally {
+            fileWrite(" 님이 퇴장했습니다.", curDate, logFileStream);
             fileClose(logFileStream);
         }
     }
