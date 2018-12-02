@@ -2,8 +2,7 @@ package com.chat.main;
 
 import com.chat.thread.ChatServerProcessThread;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,7 +23,8 @@ public class MultiThreadChatServer {
         Integer MAX_THREADS = Integer.parseInt(args[0]);
 
         ServerSocket serverSocket = null;
-        List<PrintWriter> listWriters = new ArrayList<>();
+        List<PrintWriter> listSocketWriters = new ArrayList<>();
+
         ExecutorService executorService = null;
 
         try {
@@ -38,7 +38,7 @@ public class MultiThreadChatServer {
 
             while(true) {
                 Socket socket = serverSocket.accept();
-                ChatServerProcessThread thread = new ChatServerProcessThread(socket, listWriters);
+                ChatServerProcessThread thread = new ChatServerProcessThread(socket, listSocketWriters);
                 executorService.execute(thread);
             }
         } catch (IOException e) {
