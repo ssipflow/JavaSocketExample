@@ -52,10 +52,10 @@ public class MultiThreadChatClient {
                 String message = scanner.nextLine();
 
                 if(message.isEmpty()) {
-                    System.out.println("메세지는 최소 한글자 이상입니다.");
+                    consoleLog("메세지는 최소 한글자 이상입니다.");
                     continue;
                 }
-                
+
                 if("quit".equals(message)) {
                     System.exit(1);
                 } else {
